@@ -1,3 +1,6 @@
+#[cfg(target_os = "symbian")]
+use crate::os::libc;
+
 /// Values supported by [`Mmap::advise`][crate::Mmap::advise] and [`MmapMut::advise`][crate::MmapMut::advise] functions.
 ///
 /// See [madvise()](https://man7.org/linux/man-pages/man2/madvise.2.html) map page.

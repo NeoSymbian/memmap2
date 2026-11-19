@@ -56,11 +56,19 @@
 
 #![allow(clippy::len_without_is_empty, clippy::missing_safety_doc)]
 
-#[cfg_attr(unix, path = "unix.rs")]
+#[cfg_attr(all(unix, not(target_os = "symbian")), path = "unix.rs")]
+#[cfg_attr(target_os = "symbian", path = "symbian.rs")]
 #[cfg_attr(windows, path = "windows.rs")]
 #[cfg_attr(not(any(unix, windows)), path = "stub.rs")]
 mod os;
 use crate::os::{file_len, MmapInner};
+// NeoSymbian: the heap backend's `libc` adds the madvise names P.I.P.S. lacks
+#[cfg(target_os = "symbian")]
+use crate::os::libc;
+// the heap backend, tested on the host
+#[cfg(all(test, unix, not(target_os = "symbian")))]
+#[path = "symbian.rs"]
+mod symbian_heap;
 
 #[cfg(unix)]
 mod advice;
